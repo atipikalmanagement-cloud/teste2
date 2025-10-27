@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinador de Vendas - Digital Revolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6, #06b6d4);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 14px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .success-alert {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 4px solid #28a745;
+            color: #155724;
+            padding: 15px 20px;
+            margin: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .setup-section {
+            padding: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .setup-section h2 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 58, 138, 0.4);
+        }
+
+        .btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .chat-section {
+            padding: 30px;
+            display: none;
+        }
+
+        .chat-section.active {
+            display: block;
+        }
+
+        .conversation {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+            line-height: 1.6;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.vendedor {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+
+        .message.cliente {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message .label {
+            font-weight: 700;
+            font-size: 11px;
+            opacity: 0.85;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .voice-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 60px;
+            font-size: 16px;
+        }
+
+        .voice-btn.listening {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            50% { opacity: 0.9; box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #475569;
+            font-weight: 600;
+            border: 2px solid #e2e8f0;
+        }
+
+        .status.thinking {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border-color: #fbbf24;
+        }
+
+        .status.speaking {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+
+        .status.listening {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border-color: #10b981;
+        }
+
+        .scenario-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .scenario-card h3 {
+            color: #1e3a8a;
+            font-size: 17px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .transcript-box {
+            background: white;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 60px;
+            margin-bottom: 15px;
+            color: #64748b;
+            font-style: italic;
+            display: none;
+        }
+
+        .transcript-box.active {
+            display: block;
+            border-color: #3b82f6;
+            color: #1e293b;
+            background: #f8fafc;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .voice-controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Treinador de Vendas com IA</h1>
+            <p>Pratica chamadas de qualificação com consultores imobiliários virtuais</p>
+            <div class="brand-badge">DIGITAL REVOLUTION</div>
+        </div>
+
+        <div class="success-alert">
+            <strong>✅ Versão com Backend Serverless!</strong>
+            Sem problemas de CORS ou bloqueios. 100% funcional! 🚀
+        </div>
+
+        <div id="setupSection" class="setup-section">
+            <h2>🎬 Escolhe o Tipo de Consultor</h2>
+
+            <div class="info-box">
+                <strong>💡 Sobre este Treino:</strong>
+                Pratica chamadas de qualificação como vendedor da Digital Revolution - ajudamos consultores imobiliários a gerar leads qualificadas através do marketing digital.
+            </div>
+
+            <div class="form-group">
+                <label for="scenarioSelect">📞 Tipo de Consultor:</label>
+                <select id="scenarioSelect">
+                    <option value="qualificado_interessado">✅ Consultor Qualificado e Interessado</option>
+                    <option value="nao_qualificado">❌ Consultor Não Qualificado</option>
+                    <option value="qualificado_esquecido">🤔 Consultor Qualificado mas Frio</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="startSession()">🚀 Iniciar Chamada</button>
+        </div>
+
+        <div id="chatSection" class="chat-section">
+            <div class="scenario-card">
+                <h3 id="scenarioTitle">Cenário</h3>
+                <p id="scenarioDescription">Descrição</p>
+            </div>
+
+            <div id="status" class="status">👋 Clica em "Começar a Falar"!</div>
+            
+            <div id="transcriptBox" class="transcript-box">A ouvir...</div>
+
+            <div class="voice-controls">
+                <button id="talkBtn" class="btn voice-btn" onclick="startListening()">
+                    🎤 Começar a Falar
+                </button>
+                <button id="stopBtn" class="btn voice-btn" onclick="stopListening()" disabled>
+                    ⏹️ Parar de Falar
+                </button>
+            </div>
+
+            <div id="conversation" class="conversation"></div>
+
+            <button class="btn" onclick="resetSession()" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">🔄 Nova Chamada</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScenario = {};
+        let conversationHistory = [];
+        let recognition = null;
+        let isListening = false;
+        let currentTranscript = '';
+
+        const perfilQualificado = `
+PERFIL CONSULTOR QUALIFICADO:
+- Função: Consultor/broker/team leader
+- Experiência: Mínimo 1,5 anos
+- Faturação: Mínimo 50.000€/ano
+- Mindset: Ambicioso
+- Problemas: Falta contactos/produto
+- Sonhos: Leads diárias, reformar cedo
+`;
+
+        const scenarios = {
+            qualificado_interessado: {
+                title: '✅ Consultor Qualificado e Interessado',
+                description: 'Preencheu formulário, qualificado e interessado em leads digitais.',
+                prompt: `És consultor imobiliário português que preencheu formulário Digital Revolution.
+${perfilQualificado}
+CONTEXTO: Preencheste há 2 dias, genuinamente interessado, Lisboa/Porto
+COMPORTAMENTO: Educado, respondes honestamente, ceticismo saudável, perguntas inteligentes
+Objeções: "Já tentei Facebook", "Quanto custa?", "Tempo resultados?"
+IMPORTANTE: Português Portugal, respostas curtas (2-3 frases), natural, SÓ como consultor`
+            },
+            nao_qualificado: {
+                title: '❌ Consultor Não Qualificado',
+                description: 'Não cumpre critérios: <1,5 anos OU <50k€/ano.',
+                prompt: `És consultor iniciante que preencheu formulário.
+NÃO QUALIFICADO: Só 8 meses experiência, ~15k€ faturação
+COMPORTAMENTO: Simpático, honesto sobre situação, aceitas não estar no nível
+Português Portugal, respostas curtas, NÃO inventes ser qualificado`
+            },
+            qualificado_esquecido: {
+                title: '🤔 Consultor Qualificado mas Frio',
+                description: 'Qualificado mas não se lembra/desinteressado. Precisa ser "acordado".',
+                prompt: `És consultor experiente que preencheu mas não lembras.
+${perfilQualificado}
+INÍCIO: Frio, ocupado, "Não lembro", "Estou ocupado", respostas curtas
+SE VENDEDOR BOM: Começas interessar-te gradualmente
+Português Portugal, frio→curioso→interessado`
+            }
+        };
+
+        function startSession() {
+            const scenarioKey = document.getElementById('scenarioSelect').value;
+            currentScenario = scenarios[scenarioKey];
+
+            document.getElementById('scenarioTitle').textContent = currentScenario.title;
+            document.getElementById('scenarioDescription').textContent = currentScenario.description;
+            
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('chatSection').classList.add('active');
+
+            if (!recognition) {
+                try {
+                    initSpeechRecognition();
+                } catch (error) {
+                    alert('❌ Browser não suporta voz. Usa Chrome/Edge/Safari.');
+                    resetSession();
+                    return;
+                }
+            }
+
+            setTimeout(() => {
+                addMessage('cliente', "Está lá?");
+                conversationHistory.push({ role: 'assistant', content: "Está lá?" });
+                speakText("Está lá?");
+            }, 1500);
+        }
+
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) throw new Error('Voz não suportada');
+            
+            recognition = new SpeechRecognition();
+            recognition.lang = 'pt-PT';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('talkBtn').classList.add('listening');
+                document.getElementById('talkBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('status').textContent = '🎤 A ouvir...';
+                document.getElementById('status').classList.add('listening');
+                document.getElementById('transcriptBox').classList.add('active');
+            };
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                currentTranscript = transcript;
+                document.getElementById('transcriptBox').textContent = transcript || 'A ouvir...';
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Erro:', event.error);
+                if (event.error === 'not-allowed') {
+                    alert('❌ Dá permissão ao microfone!');
+                }
+            };
+
+            recognition.onend = () => {
+                if (isListening && currentTranscript.trim()) {
+                    sendVoiceMessage(currentTranscript.trim());
+                }
+                isListening = false;
+                document.getElementById('talkBtn').classList.remove('listening');
+                document.getElementById('talkBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('status').classList.remove('listening');
+                document.getElementById('transcriptBox').classList.remove('active');
+            };
+        }
+
+        function startListening() {
+            if (recognition && !isListening) {
+                currentTranscript = '';
+                try {
+                    recognition.start();
+                } catch (error) {
+                    alert('❌ Erro microfone. Recarrega.');
+                }
+            }
+        }
+
+        function stopListening() {
+            if (recognition && isListening) recognition.stop();
+        }
+
+        async function sendVoiceMessage(message) {
+            addMessage('vendedor', message);
+            conversationHistory.push({ role: 'user', content: message });
+            document.getElementById('transcriptBox').textContent = '✅ "' + message + '"';
+            await getClientResponse();
+        }
+
+        async function getClientResponse() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = '💭 Consultor a pensar...';
+            statusEl.classList.add('thinking');
+
+            try {
+                console.log('🚀 Chamando backend /api/anthropic');
+
+                // USAR O BACKEND EM VEZ DA API DIRETA!
+                const response = await fetch('/api/anthropic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: conversationHistory,
+                        system: currentScenario.prompt,
+                        max_tokens: 300
+                    })
+                });
+
+                console.log('Resposta backend:', response.status);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || 'Erro no backend');
+                }
+
+                const data = await response.json();
+                const clientMessage = data.content[0].text;
+
+                conversationHistory.push({ role: 'assistant', content: clientMessage });
+                addMessage('cliente', clientMessage);
+
+                statusEl.textContent = '🔊 Consultor a falar...';
+                statusEl.classList.remove('thinking');
+                statusEl.classList.add('speaking');
+
+                await speakText(clientMessage);
+
+                statusEl.textContent = '✅ A tua vez!';
+                statusEl.classList.remove('speaking');
+
+            } catch (error) {
+                console.error('Erro:', error);
+                statusEl.textContent = '❌ Erro';
+                statusEl.classList.remove('thinking', 'speaking');
+                alert('❌ ' + error.message);
+            }
+        }
+
+        async function speakText(text) {
+            try {
+                console.log('🔊 Gerando voz via /api/elevenlabs');
+
+                // USAR O BACKEND EM VEZ DA API DIRETA!
+                const response = await fetch('/api/elevenlabs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        voice_settings: {
+                            stability: 0.5,
+                            similarity_boost: 0.75
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao gerar voz');
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                
+                return new Promise((resolve, reject) => {
+                    audio.onended = () => {
+                        URL.revokeObjectURL(audioUrl);
+                        resolve();
+                    };
+                    audio.onerror = reject;
+                    audio.play().catch(reject);
+                });
+
+            } catch (error) {
+                console.error('Erro voz:', error);
+                throw error;
+            }
+        }
+
+        function addMessage(sender, text) {
+            const conversation = document.getElementById('conversation');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const label = sender === 'vendedor' ? '📞 TU (DR)' : '👤 CONSULTOR';
+            messageDiv.innerHTML = `<div class="label">${label}</div><div>${text}</div>`;
+            
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function resetSession() {
+            if (confirm('Terminar e começar nova?')) {
+                document.getElementById('setupSection').style.display = 'block';
+                document.getElementById('chatSection').classList.remove('active');
+                document.getElementById('conversation').innerHTML = '';
+                conversationHistory = [];
+                currentTranscript = '';
+                if (recognition) {
+                    try { recognition.abort(); } catch (e) {}
+                }
+            }
+        }
+
+        console.log('🚀 Treinador Digital Revolution v2.0 (com backend) carregado!');
+    </script>
+</body>
+</html>

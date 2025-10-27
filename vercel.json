@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "name": "sales-trainer-digital-revolution",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "ANTHROPIC_API_KEY": "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",
+    "ELEVENLABS_API_KEY": "sk_2ebee93f290d124cf8498ca58d3bcf7c3e8aa7e3fcb68670"
+  }
+}

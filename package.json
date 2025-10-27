@@ -1,0 +1,16 @@
+{
+  "name": "sales-trainer-digital-revolution",
+  "version": "2.0.0",
+  "description": "Treinador de vendas com IA e voz - Digital Revolution",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["sales", "training", "ai", "voice", "vercel"],
+  "author": "Digital Revolution",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.x"
+  }
+}
